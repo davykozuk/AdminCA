@@ -88,7 +88,7 @@ else {
     $Credential = Get-Credential
     $UserName = $Credential.UserName
     $Password = $Credential.GetNetworkCredential().Password
-    .\PsExec.exe \\$CpName -u $UserName -p $Password -h cmd /c "c:\temp\Drivers\DELLMUP.exe" /s /v"FORCERESTART=true" /v"LOGFILE=c:\temp\logmup.log" /v"FORCE=true"
+    .\PsExec.exe \\$ComputerName -u $UserName -p $Password -h cmd /c "c:\temp\Drivers\DELLMUP.exe" /s /v"FORCERESTART=true" /v"LOGFILE=c:\temp\logmup.log" /v"FORCE=true"
     Write-Host "L'INSTALLATION DES PILOTES EST TERMINEE"
     $Retour.Text = "L'INSTALLATION DES PILOTES EST TERMINEE"
 }
@@ -144,11 +144,13 @@ function Printmgmt ()
 
 function DisplayLink()
 {   
+    $ComputerName = $Poste.Text
     $Error.Clear()
     $Credential = Get-Credential
     $UserName = $Credential.UserName
     $Password = $Credential.GetNetworkCredential().Password
-    .\PsExec.exe \\$Poste -u $UserName -p $Password -h cmd /c msiexec /i "\\cw01pnmtst00\IP\Domaines clients\CR NMP\Drivers\\DisplayLink_Win10RS.msi" /norestart /quiet
+    robocopy "\\cw01pnmtst00\IP\Domaines clients\CR NMP\Drivers\DisplayLink_Win10RS.msi" "\\$ComputerName\c$\temp\"
+    .\PsExec.exe \\$ComputerName -u $UserName -p $Password -h cmd /c msiexec /i "\\$ComputerName\c$\temp\DisplayLink_Win10RS.msi" /norestart /quiet
     $Retour.Text = "Display Link installé."
     $Retour.Text = $Error
 }
