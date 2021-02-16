@@ -1,4 +1,3 @@
-
 #-------------------------------------------------------------#
 #----Initial Declarations-------------------------------------#
 #-------------------------------------------------------------#
@@ -7,7 +6,6 @@ Add-Type -AssemblyName PresentationCore, PresentationFramework
 
 $Xaml = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="INSTALLSON +" Height="400" Width="525" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0">
-
     <Grid>
         <Grid HorizontalAlignment="Right" Width="517" Margin="0,-1,0,1" Background="#FF9E8F8F">
             <Grid.ColumnDefinitions>
@@ -33,7 +31,6 @@ $Xaml = @"
             <TextBox HorizontalAlignment="Left" Height="23" Margin="10,295,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Name="IpAddr"/>
         </Grid>
 </Grid>
-
 </Window>
 "@
 
@@ -215,11 +212,9 @@ function FillDataContext($props){
 
 
 $DataObject =  ConvertFrom-Json @"
-
 {    "DELL" : ["5590","5500","5510"],
     "IMP" : ["Brother HL-L6300DW series","Epson AL-M300 series","Epson AL-C300 series"],
     "PORT" : ["USB001:","LPT1:","LPT2:"]}
-
 "@
 
 $DataContext = New-Object System.Collections.ObjectModel.ObservableCollection[Object]
@@ -229,4 +224,3 @@ $Window.DataContext = $DataContext
 Set-Binding -Target $ComboImp -Property $([System.Windows.Controls.ComboBox]::ItemsSourceProperty) -Index 1 -Name "IMP"
 Set-Binding -Target $ComboPort -Property $([System.Windows.Controls.ComboBox]::ItemsSourceProperty) -Index 2 -Name "PORT"
 $Window.ShowDialog()
-
