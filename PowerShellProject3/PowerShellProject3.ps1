@@ -6,7 +6,7 @@
 Add-Type -AssemblyName PresentationCore, PresentationFramework
 
 $Xaml = @"
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="MainWindow" Height="400" Width="525" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0">
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="INSTALLSON +" Height="400" Width="525" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0">
 
     <Grid>
         <Grid HorizontalAlignment="Right" Width="517" Margin="0,-1,0,1" Background="#FF9E8F8F">
@@ -149,10 +149,10 @@ function DisplayLink()
     $Credential = Get-Credential
     $UserName = $Credential.UserName
     $Password = $Credential.GetNetworkCredential().Password
-    robocopy "\\cw01pnmtst00\IP\Domaines clients\CR NMP\Drivers\DisplayLink_Win10RS.msi" "\\$ComputerName\c$\temp\"
-    .\PsExec.exe \\$ComputerName -u $UserName -p $Password -h cmd /c msiexec /i "\\$ComputerName\c$\temp\DisplayLink_Win10RS.msi" /norestart /quiet
+    robocopy "\\cw01pnmtst00\IP\Domaines clients\CR NMP\Drivers\DisplayLink_Win10RS.msi" "\\$ComputerName\c$\temp\DisplayLink_Win10RS.msi"
+    .\PsExec.exe \\$ComputerName -u $UserName -p $Password -h cmd /c msiexec /i "\\$ComputerName\c:\temp\DisplayLink_Win10RS.msi" /norestart /quiet
     $Retour.Text = "Display Link installé."
-    $Retour.Text = $Error
+    write-host "Display Link installé."
 }
 #endregion
 
