@@ -1,4 +1,4 @@
-﻿
+
 #-------------------------------------------------------------#
 #----Initial Declarations-------------------------------------#
 #-------------------------------------------------------------#
@@ -68,25 +68,27 @@ function Valide()
 
 function InstallSon()
 {
-$Poste = $Nom.Text
+    $ComputerName = $Poste.Text
+    $Wmi = Get-WmiObject -ComputerName $Poste.Text Win32_ComputerSystem
+    $Model=($Wmi).Model
+
 #if (Test-Path "\\$Poste\c$\temp\DUP\DELLMUP.exe")
-if (Test-Path "\\$Poste\c$\temp\DUP$Model\DELLMUP.exe")
+if (Test-Path "\\$Poste.text\c$\temp\DUP_$Model\DELLMUP.exe")
 {
-    $Retour.Text = "Un pilote est deja present dans le dossier c:\temp de $Poste veuillez le supprimer et recommencer"
-    Invoke-Item "\\$Poste\c$\temp\"
+    $Retour.Text = "Un pilote est deja present dans le dossier c:\temp de $Poste.text veuillez le supprimer et recommencer"
+    Invoke-Item "\\$Poste.text\c$\temp\"
 }
 else {
  #   if (Test-Path "\\cw01pnmtst00\IP\Domaines clients\CR NMP\Drivers\DUP")
- if (Test-Path $Source)
+ if (Test-Path "\\cw01pnmtst00\IP\Domaines clients\CR NMP\Drivers\DUP_$Model")
     {
-    $Cop = Get-Childitem $Source
-    foreach($Fichier in $Cop){
-    Copy-Item  $source\$Fichier -Destination $Destination
-    $Retour.Text = "Copie de $Fichier en cours"}
+    $SourceF = "\\cw01pnmtst00\IP\Domaines clients\CR NMP\Drivers\DUP_$Model"
+    ROBOCOPY "$SourceF" "\\$ComputerName\c$\temp\Drivers" /E | %{$data = $_.Split([char]9); if("$($data[4])" -ne "") { $file = "$($data[4])"} ;Write-Progress "Percentage $($data[0])" -Activity "Robocopy" -CurrentOperation "$($file)"  -ErrorAction SilentlyContinue; }
+    $Retour.Text = "Copie des fichiers terminee installation va commencer"
     $Credential = Get-Credential
     $UserName = $Credential.UserName
     $Password = $Credential.GetNetworkCredential().Password
-    .\PsExec.exe \\$Poste -u $UserName -p $Password -h cmd /c "c:\temp\DUP\DELLMUP.exe" /s /v"FORCERESTART=true" /v"LOGFILE=c:\temp\logmup.log" /v"FORCE=true"
+    .\PsExec.exe \\$CpName -u $UserName -p $Password -h cmd /c "c:\temp\Drivers\DELLMUP.exe" /s /v"FORCERESTART=true" /v"LOGFILE=c:\temp\logmup.log" /v"FORCE=true"
     Write-Host "L'INSTALLATION DES PILOTES EST TERMINEE"
     $Retour.Text = "L'INSTALLATION DES PILOTES EST TERMINEE"
 }
@@ -160,9 +162,7 @@ $Window = [Windows.Markup.XamlReader]::Parse($Xaml)
 
 [xml]$xml = $Xaml
 
-$Source =""
-$Destination =""
-$Model
+$Source ="\\CW01pnmtst00\IP\Domaines clients\CR NMP\Drivers\DUP"
 $xml.SelectNodes("//*[@Name]") | ForEach-Object { Set-Variable -Name $_.Name -Value $Window.FindName($_.Name) }
 
 $kl3uzh3b2z6ee.IsEnabled = $false
@@ -171,7 +171,7 @@ $kl3uzh3bxspqs.IsEnabled = $false
 $kl3uzh3bb5ivb.IsEnabled = $false
 $kl3uzh3cjawp9.IsEnabled = $false
 
-kl3uzh3bcgzdr.Add_Click({DisplayLink $this $_})
+$kl3uzh3bcgzdr.Add_Click({DisplayLink $this $_})
 $kl3uzh3bk3a0w.Add_Click({Valide $this $_})
 $kl3uzh3b2z6ee.Add_Click({InstallSon $this $_})
 $Version_b.Add_Click({Versioninfo $this $_})
@@ -227,5 +227,4 @@ $Window.DataContext = $DataContext
 Set-Binding -Target $ComboImp -Property $([System.Windows.Controls.ComboBox]::ItemsSourceProperty) -Index 1 -Name "IMP"
 Set-Binding -Target $ComboPort -Property $([System.Windows.Controls.ComboBox]::ItemsSourceProperty) -Index 2 -Name "PORT"
 $Window.ShowDialog()
-
 
